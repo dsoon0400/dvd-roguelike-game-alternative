@@ -1,0 +1,440 @@
+:root {
+    --primary-color: #00FFFF; /* Cyan */
+    --bg-color: #111;
+    --container-bg: #000;
+    --border-color: #444;
+    --text-color: #FFF;
+    --ready-color: #00FF00;
+    --cooldown-color: #FF4444;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Consolas', 'Menlo', monospace;
+    color: var(--text-color);
+    overflow: hidden;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+    justify-content: center;
+    width: 100vw;
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+#tv-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 600px;
+    max-width: 100vw;
+    background: none;
+}
+
+#screen {
+    width: 600px;
+    height: 400px;
+    background: #000;
+    border: 32px solid;
+    border-image: linear-gradient(180deg, #222 0%, #444 40%, #111 100%) 1;
+    border-radius: 38px 38px 48px 48px/32px 32px 64px 64px;
+    box-shadow:
+        0 0 0 8px #000,
+        0 16px 64px #000e,
+        inset 0 0 180px #000f,
+        0 0 0 2px #333;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+/* CRT convex bulge and vignette */
+#screen::after {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* CRT scanlines overlay */
+#screen::before {
+    display: none;
+}
+
+/* CRT glass glare/reflection */
+#screen .crt-glare {
+    display: none;
+}
+
+/* Thin black inner bezel */
+#screen::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    z-index: 3;
+    border-radius: 8px 8px 18px 18px/12px 12px 28px 28px;
+    border: 3px solid #181818;
+    box-sizing: border-box;
+}
+
+#screen::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    left: 20%;
+    top: 30%;
+    width: 60%;
+    height: 28%;
+    z-index: 2;
+    background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 80%, transparent 100%);
+    border: none;
+    box-shadow: none;
+    display: block;
+}
+
+@keyframes screen-shake {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 2px); }
+    50% { transform: translate(2px, -2px); }
+    75% { transform: translate(-2px, -2px); }
+}
+
+.shake {
+    animation: screen-shake 0.15s ease-in-out;
+}
+
+@keyframes flicker {
+    0% { filter: brightness(2.2) contrast(1.5); background: rgba(255,255,255,0.25); }
+    10% { filter: brightness(0.5) contrast(1.7); background: rgba(255,255,255,0.18); }
+    20% { filter: brightness(2.0) contrast(1.2); background: rgba(255,255,255,0.12); }
+    30% { filter: brightness(0.7) contrast(1.6); background: rgba(255,255,255,0.10); }
+    40% { filter: brightness(1.7) contrast(1.3); background: rgba(255,255,255,0.08); }
+    50% { filter: brightness(0.8) contrast(1.7); background: rgba(255,255,255,0.10); }
+    60% { filter: brightness(2.1) contrast(1.1); background: rgba(255,255,255,0.12); }
+    70% { filter: brightness(0.7) contrast(1.6); background: rgba(255,255,255,0.18); }
+    80% { filter: brightness(1.7) contrast(1.3); background: rgba(255,255,255,0.22); }
+    90% { filter: brightness(0.8) contrast(1.7); background: rgba(255,255,255,0.25); }
+    100% { filter: brightness(1.0) contrast(1.0); background: none; }
+}
+
+#screen.flicker {
+    animation: flicker 0.22s linear 1;
+    position: relative;
+    overflow: hidden;
+}
+
+#screen.flicker::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.25);
+    pointer-events: none;
+    z-index: 10;
+    border-radius: inherit;
+    animation: flicker-flash 0.22s linear 1;
+}
+
+@keyframes flicker-flash {
+    0% { opacity: 1; }
+    80% { opacity: 0.7; }
+    100% { opacity: 0; }
+}
+
+/* TV static noise overlay for flicker */
+#screen.flicker::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0.45;
+    background-image: url('data:image/svg+xml;utf8,<svg width="120" height="60" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
+    background-size: 120px 60px;
+    animation: static-flicker 0.22s steps(2, end) infinite;
+    border-radius: inherit;
+}
+
+@keyframes static-flicker {
+    0% { opacity: 0.45; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.45; }
+}
+
+#logo {
+    position: absolute;
+    left: 0; top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    background: transparent;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border-radius: 0;
+    font-family: 'Arial Black', Arial, Helvetica, sans-serif;
+    font-style: italic;
+    color: var(--primary-color);
+    text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px var(--primary-color);
+    font-size: 38px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 0;
+    transition: transform 0.1s, color 0.3s, box-shadow 0.3s;
+    will-change: transform, left, top;
+    z-index: 10;
+    user-select: none;
+}
+
+.dvd-main {
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 8px var(--primary-color);
+}
+
+.dvd-video {
+    font-size: 16px;
+    letter-spacing: 6px;
+    margin-top: -2px;
+    color: var(--primary-color);
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        0 0 4px var(--primary-color);
+}
+
+@keyframes nudge-animation {
+    from {
+        transform: scale(0);
+        opacity: 0.7;
+    }
+    to {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+#nudge-effect {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#nudge-effect.active {
+    animation: nudge-animation 0.4s ease-out;
+}
+
+/* TV control panel at the bottom of the screen */
+#ui-panel {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    background: #000;
+    border-top: 16px solid #222;
+    border-bottom-left-radius: 38px;
+    border-bottom-right-radius: 38px;
+    box-shadow: 0 8px 32px #000b, 0 0 0 2px #333;
+    padding: 18px 0 12px 0;
+    z-index: 10;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.ui-box {
+    flex: 1;
+    background: transparent;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    text-align: center;
+    font-family: 'VT323', 'Consolas', 'Menlo', 'monospace', 'Arial';
+    margin: 0 8px;
+    min-width: 0;
+}
+
+.ui-box h3 {
+    margin: 0 0 2px 0;
+    font-size: 13px;
+    color: #aaa;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px #000a;
+    font-family: inherit;
+    opacity: 0.85;
+}
+
+.ui-box p {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-family: inherit;
+    color: var(--primary-color);
+    text-shadow: 0 1px 2px #000a, 0 0 6px #2228;
+    opacity: 0.95;
+}
+
+#nudge-status-display.ready { color: var(--ready-color); }
+#nudge-status-display.cooldown { color: var(--cooldown-color); }
+
+/* Modal Styles */
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+#modal-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#modal-content {
+    background-color: var(--container-bg);
+    border: 2px solid var(--primary-color);
+    padding: 30px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 0 20px var(--primary-color);
+}
+
+#modal-content h2 {
+    margin-top: 0;
+}
+
+#modal-content button {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    margin-top: 15px;
+}
+
+#modal-content button:hover {
+    transform: scale(1.05);
+}
+
+#upgrade-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.upgrade-button {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    border: 2px solid var(--border-color) !important;
+    text-align: left;
+    padding: 15px !important;
+}
+
+.upgrade-button:hover {
+    border-color: var(--primary-color) !important;
+}
+
+.upgrade-button h4 {
+    margin: 0 0 5px 0;
+    color: var(--primary-color);
+}
+.upgrade-button p {
+    margin: 0;
+    font-size: 14px !important;
+    font-weight: normal !important;
+}
+
+#upgrade-log {
+    width: 180px;
+    min-height: 300px;
+    max-height: 400px;
+    background: var(--container-bg);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: 15px;
+    font-family: inherit;
+    padding: 12px 10px;
+    margin-right: 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    margin-top: 0;
+}
+
+@media (max-width: 900px) {
+    #game-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    #upgrade-log {
+        margin-right: 0;
+        margin-top: 18px;
+        width: 90vw;
+        max-width: 400px;
+    }
+    #tv-unit {
+        min-width: 0;
+        width: 100vw;
+        max-width: 100vw;
+    }
+}

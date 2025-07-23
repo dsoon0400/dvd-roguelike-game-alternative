@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD Rogue: Corner Hunter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="upgrade-log"></div>
+        <div id="tv-unit">
+            <div id="screen">
+                <div id="logo">
+                  <span class="dvd-main">DVD</span>
+                  <span class="dvd-video">VIDEO</span>
+                </div>
+                <div id="nudge-effect"></div>
+                <div class="crt-glare"></div>
+            </div>
+            <div id="ui-panel">
+                <div class="ui-box">
+                    <h3>ROUND</h3>
+                    <p id="round-display">1</p>
+                </div>
+                <div class="ui-box">
+                    <h3>GOAL</h3>
+                    <p><span id="corners-hit-display">0</span> / <span id="corners-goal-display">1</span> Corners</p>
+                </div>
+                <div class="ui-box">
+                    <h3>TIME</h3>
+                    <p id="timer-display">45</p>
+                </div>
+                <div class="ui-box">
+                    <h3>NUDGE</h3>
+                    <p id="nudge-status-display">READY</p>
+                </div>
+            </div>
+        </div>
+
+    <div id="modal-overlay" class="visible">
+        <div id="modal-content">
+            <h2 id="modal-title">DVD Rogue</h2>
+            <p id="modal-text">Guide the bouncing logo into the corners using a timed 'Nudge'. Click the screen or press Spacebar to nudge. Clear rounds to earn powerful upgrades.</p>
+            <button id="start-button">Start Game</button>
+            <div id="upgrade-selection"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
