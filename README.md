@@ -27,10 +27,9 @@ A browser-based arcade roguelike inspired by the classic DVD screensaver. Guide 
 1. **Clone the repository:**
    ```
    git clone <repo-url>
-   cd dvd-roguelike-game
+   cd dvd-roguelike-game-alternative
    ```
 2. **Open `index.html` in your browser.**
-   - No build step or server required—just open the file!
 
 ## Project Structure
 - `index.html` — Main HTML file
