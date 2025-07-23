@@ -1,4 +1,6 @@
-# DVD Rogue: Corner Hunter
+# DVD Rogue: Corner Hunter (Alternative)
+
+*This is an alternative version of my original game, with updated visuals and experimental changes to gameplay*
 
 A browser-based arcade roguelike inspired by the classic DVD screensaver. Guide the bouncing logo to hit screen corners using strategic nudges and upgrades. Each round increases the challenge—how far can you go?
 
